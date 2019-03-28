@@ -21,7 +21,7 @@ namespace BlogsConsole
                     Console.WriteLine("3) Post to a blog");
                     Console.WriteLine("4) Exit");
                     choice = Console.ReadLine();
-                    if (choice == "1") {
+                    if (choice == "2") {
                         // Create and save a new Blog
                         Console.Write("Enter a name for a new Blog: ");
                         var name = Console.ReadLine();
@@ -32,7 +32,7 @@ namespace BlogsConsole
                         db.AddBlog(blog);
                         logger.Info("Blog added - {name}", name);
 
-                    } else if (choice == "2")
+                    } else if (choice == "1")
                     {
                         var db = new BloggingContext();
                         var query = db.Blogs.OrderBy(b => b.Name);
@@ -44,8 +44,33 @@ namespace BlogsConsole
                         }
                     } else if (choice == "3")
                     {
+                        BloggingContext context = new BloggingContext();
+                        Post newpost = new Post();
 
+                        Console.Write("Enter the name of blog you want to post in: ");
+                        string ablog = Console.ReadLine();
 
+                            var blog = context.Blogs
+                                            .Where(b => b.Name == ablog)
+                                            .FirstOrDefault();
+                        if (blog == null)
+                        {
+                            Console.WriteLine("You cannot post to this blog because it might be misspelled or an error occured.");
+                            logger.Warn("Query returned with {0}", blog);
+                        }
+                        else
+                        {
+                            
+                            Console.Write("Enter title of post: ");
+                            string title = Console.ReadLine();
+                            Console.WriteLine("Enter post content: ");
+                            string content = Console.ReadLine();
+
+                            newpost.Blog = blog;
+                            newpost.Title = title;
+                            newpost.Content = content;
+                            logger.Info("New blog post with title " + title + " on the blog " + blog);
+                        }
 
 
                     } else if (choice == "4")
