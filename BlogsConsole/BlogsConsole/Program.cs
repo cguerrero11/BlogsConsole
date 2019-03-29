@@ -35,17 +35,20 @@ namespace BlogsConsole
 
                     } else if (choice == "1")
                     {
+                        //View blogs
                         var db = new BloggingContext();
                         var query = db.Blogs.OrderBy(b => b.Name);
 
-                        Console.WriteLine("All blogs in the database:");
+                        Console.WriteLine("All blogs in the database: \n");
                         foreach (var item in query)
                         {
                             Console.WriteLine(item.Name);
+                            Console.WriteLine();
                         }
                     } else if (choice == "3")
                     {
-                        BloggingContext context = new BloggingContext();
+                        //Posting to a blog
+                        var context = new BloggingContext();
 
                         Console.Write("Enter the name of blog you want to post in: ");
                         string ablog = Console.ReadLine();
@@ -60,20 +63,23 @@ namespace BlogsConsole
                         }
                         else
                         {
-                            
                             Console.Write("Enter title of post: ");
                             string title = Console.ReadLine();
 
                             if (title == "")
                             {
-                                Console.WriteLine("Title cannot be blank.");
+                                Console.WriteLine("Title cannot be blank. Try again.");
                             }
                             else
                             {
-
                                 Console.WriteLine("Enter post content: ");
                                 string content = Console.ReadLine();
-                                var post = new Post { Blog = blog, Title = title, Content = content };
+                                if (content == "")
+                                {
+                                    content = null;
+                                }
+                                var post = new Post { Blog = blog, Title = title, Content = content, BlogId = blog.BlogId };
+                                context.AddPost(post);
                             }
 
                             logger.Info("New blog post with title " + title + " on the blog " + blog);
@@ -83,6 +89,30 @@ namespace BlogsConsole
                     } else if (choice == "4")
                     {
                         //view posts
+                        var context = new BloggingContext();
+
+                        Console.Write("Enter name of blog to view posts of: ");
+                        string ablog = Console.ReadLine();
+
+                        var blog = context.Blogs
+                                        .Where(b => b.Name == ablog)
+                                        .FirstOrDefault();
+
+                        var id = context.Posts
+                                        .Where(p => p.BlogId == blog.BlogId)
+                                        .FirstOrDefault();
+
+                        if (blog == null)
+                        {
+                            Console.WriteLine("That blog does not exist.");
+                            logger.Info("User tried to search for " + ablog);
+                        } else
+                        {
+
+
+
+                        }
+
                     }
                     else if (choice == "5")
                     {
@@ -93,7 +123,7 @@ namespace BlogsConsole
                         Console.WriteLine("Invalid choice.");
                         choice = "1";
                     }
-                }
+                } //end of while loop
             } // end of try
             catch (Exception ex)
             {
