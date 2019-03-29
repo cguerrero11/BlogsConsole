@@ -19,7 +19,8 @@ namespace BlogsConsole
                     Console.WriteLine("1) Display all blogs");
                     Console.WriteLine("2) Create a new blog");
                     Console.WriteLine("3) Post to a blog");
-                    Console.WriteLine("4) Exit");
+                    Console.WriteLine("4) View posts");
+                    Console.WriteLine("5) Exit");
                     choice = Console.ReadLine();
                     if (choice == "2") {
                         // Create and save a new Blog
@@ -45,7 +46,6 @@ namespace BlogsConsole
                     } else if (choice == "3")
                     {
                         BloggingContext context = new BloggingContext();
-                        Post newpost = new Post();
 
                         Console.Write("Enter the name of blog you want to post in: ");
                         string ablog = Console.ReadLine();
@@ -63,20 +63,32 @@ namespace BlogsConsole
                             
                             Console.Write("Enter title of post: ");
                             string title = Console.ReadLine();
-                            Console.WriteLine("Enter post content: ");
-                            string content = Console.ReadLine();
 
-                            newpost.Blog = blog;
-                            newpost.Title = title;
-                            newpost.Content = content;
+                            if (title == "")
+                            {
+                                Console.WriteLine("Title cannot be blank.");
+                            }
+                            else
+                            {
+
+                                Console.WriteLine("Enter post content: ");
+                                string content = Console.ReadLine();
+                                var post = new Post { Blog = blog, Title = title, Content = content };
+                            }
+
                             logger.Info("New blog post with title " + title + " on the blog " + blog);
                         }
 
 
                     } else if (choice == "4")
                     {
-                        
-                    } else
+                        //view posts
+                    }
+                    else if (choice == "5")
+                    {
+                        //choice to exit
+                    }
+                    else
                     {
                         Console.WriteLine("Invalid choice.");
                         choice = "1";
