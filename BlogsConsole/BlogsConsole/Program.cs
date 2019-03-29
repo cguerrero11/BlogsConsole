@@ -101,12 +101,12 @@ namespace BlogsConsole
                             if (ablog.ToLower() == "all")
                             {
                                 var posts = context.Posts;
-                                Console.WriteLine($"{posts.Count()} post(s) in all blogs.");
+                                Console.WriteLine($"{posts.Count()} post(s) in all blogs.\n");
                                 foreach (Post p in posts)
                                 {
                                     Console.WriteLine($"Title: {p.Title}\n");
                                     Console.WriteLine($"Content: { p.Content}");
-                                    Console.WriteLine("---\n");
+                                    Console.WriteLine("-----");
                                 }
                             }
                             else
