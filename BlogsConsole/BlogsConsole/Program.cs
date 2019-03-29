@@ -14,7 +14,7 @@ namespace BlogsConsole
             try
             {
                 string choice = "1";
-                while (choice == "1" || choice == "2" || choice == "3") {
+                while (choice == "1" || choice == "2" || choice == "3" || choice == "4") {
                     Console.WriteLine("What would you want to do?");
                     Console.WriteLine("1) Display all blogs");
                     Console.WriteLine("2) Create a new blog");
@@ -91,29 +91,48 @@ namespace BlogsConsole
                         //view posts
                         var context = new BloggingContext();
 
-                        Console.Write("Enter name of blog to view posts of: ");
+                        Console.Write("Enter name of blog to view posts of (enter all for all posts): ");
                         string ablog = Console.ReadLine();
 
                         var blog = context.Blogs
-                                        .Where(b => b.Name == ablog)
-                                        .FirstOrDefault();
-
-                        var id = context.Posts
-                                        .Where(p => p.BlogId == blog.BlogId)
-                                        .FirstOrDefault();
-
+                                        .FirstOrDefault(b => b.Name == ablog);
                         if (blog == null)
                         {
-                            Console.WriteLine("That blog does not exist.");
-                            logger.Info("User tried to search for " + ablog);
-                        } else
+                            if (ablog.ToLower() == "all")
+                            {
+                                var posts = context.Posts;
+                                Console.WriteLine($"{posts.Count()} post(s) in all blogs.");
+                                foreach (Post p in posts)
+                                {
+                                    Console.WriteLine($"Title: {p.Title}\n");
+                                    Console.WriteLine($"Content: { p.Content}");
+                                    Console.WriteLine("---\n");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Blog does not exist.");
+                            }
+                        }
+                        else
                         {
+                            {
+                                var posts = context.Posts
+                                                .Where(p => p.BlogId == blog.BlogId);
 
+                                Console.WriteLine($"{posts.Count()} post(s) in blog {blog}.");
 
+                                foreach (Post p in posts)
+                                {
+                                    Console.WriteLine($"Title: {p.Title}");
+                                    Console.WriteLine($"Content: { p.Content}");
+                                    Console.WriteLine();
+                                }
+
+                            }
 
                         }
-
-                    }
+                        }
                     else if (choice == "5")
                     {
                         //choice to exit
